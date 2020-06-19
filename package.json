@@ -1,0 +1,26 @@
+{
+  "name": "swagger-templates",
+  "version": "1.0.0",
+  "description": "Extended templates for swagger-codegen",
+  "main": " ",
+  "scripts": {
+    "test": " "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Celleb/swagger-templates.git"
+  },
+  "keywords": [
+    "Swagger",
+    "OA3",
+    "Open",
+    "Api",
+    "Specifications"
+  ],
+  "author": "Jonas <celleb@mrcelleb.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Celleb/swagger-templates/issues"
+  },
+  "homepage": "https://github.com/Celleb/swagger-templates#readme"
+}
