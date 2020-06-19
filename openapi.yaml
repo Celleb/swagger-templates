@@ -1,0 +1,161 @@
+openapi: 3.0.0
+info:
+  version: 2.0.0
+  title: Test
+  description: API documentation testing
+servers:
+  - url: 'https://localhost:{port}'
+    variables:
+      port:
+        default: '8080'
+  - url: 'https://testing.app'
+    description: Staging server
+  - url: 'https://prod.testing.app'
+    description: Production server
+paths:
+  /trips:
+    get:
+      tags:
+        - trips
+      summary: Return a collection of trips
+      operationId: getTrips
+      responses:
+        '200':
+          description: Trips successfully returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trip'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+components:
+  schemas:
+    TripBase:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 1
+        date:
+          type: string
+          example: '2017-11-01T09:00:00.000Z'
+        departFrom:
+          type: integer
+          example: 3
+        destination:
+          type: integer
+          example: 2
+        type:
+          $ref: '#/components/schemas/TripType'
+        price:
+          type: number
+          example: 200
+        entry_date:
+          type: string
+          example: '2017-11-01T09:00:00.000Z'
+        user_id:
+          type: string
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/TripStatus'
+      required:
+        - date
+        - departFrom
+        - destination
+        - type
+        - price
+        - id
+        - user_id
+        - status
+        - entry_date
+    TripDriver:
+      allOf:
+        - $ref: '#/components/schemas/TripBase'
+        - type: object
+          properties:
+            vehicle:
+              type: integer
+              example: 3
+            passengers:
+              type: integer
+              example: 3
+          required:
+            - passengers
+            - vehicle
+    TripParcel:
+      allOf:
+        - $ref: '#/components/schemas/TripBase'
+        - type: object
+          properties:
+            vehicle:
+              type: integer
+              example: 3
+            capacity:
+              $ref: '#/components/schemas/TripParcelCapacity'
+          required:
+            - capacity
+            - vehicle
+    TripParcelCapacity:
+      type: string
+      enum:
+        - small
+        - medium
+        - large
+      example: small
+    TripPassenger:
+      allOf:
+        - $ref: '#/components/schemas/TripBase'
+        - type: object
+          properties:
+            vehicle:
+              type: integer
+              nullable: true
+            passengers:
+              type: integer
+              example: 3
+          required:
+            - passengers
+            - vehicle
+    TripStatus:
+      type: string
+      enum:
+        - active
+        - cancelled
+    TripType:
+      type: string
+      enum:
+        - driver
+        - passenger
+        - parcel
+    Trip:
+      oneOf:
+        - $ref: '#/components/schemas/TripPassenger'
+        - $ref: '#/components/schemas/TripDriver'
+        - $ref: '#/components/schemas/TripParcel'
+      discriminator:
+        propertyName: type
+  responses:
+    NotFoundError:
+      description: The items(s) you are looking for could not be found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 404
+              message:
+                type: string
+                example: The requested resource could not be found.
+              name:
+                type: string
+                enum:
+                  - NotFoundError
+                example: NotFoundError
+            required:
+              - code
+              - message
+              - name
