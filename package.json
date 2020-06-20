@@ -1,5 +1,5 @@
 {
-  "name": "swagger-templates",
+  "name": "@celleb/swagger-templates",
   "version": "1.0.0",
   "description": "Extended templates for swagger-codegen",
   "main": " ",
